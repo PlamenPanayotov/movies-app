@@ -6,6 +6,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\User;
 use App\Service\User\UserServiceInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+
 
 use Symfony\Component\HttpFoundation\Request;
 
@@ -29,19 +31,14 @@ class UserController extends AbstractController
         $user->setPassword($request->request->get("password"));
         $passwordConfirmation = $request->request->get("password_confirmation");
 
-        if(!$errors) {
+        
             $stmt = $this->userService->save($user, $passwordConfirmation);
             if($stmt === true) {
                 return $this->json([
                     'user' => $user
                 ]);
-            } else {
-                return $this->json([
-                    'error' => $stmt
-                ]);
-            }
-            
-        }
+            }        
+        
 
         return $this->json([
             'errors' => $errors
@@ -56,4 +53,20 @@ class UserController extends AbstractController
     {
         return $this->json(['result' => true]);
     }
+
+    /**
+     * @Route("/profile", name="api_profile")
+     * @IsGranted("ROLE_USER")
+     */
+     public function profile()
+     {
+        return $this->json([
+            'user' => $this->getUser()
+        ],
+        200,
+        [],
+        [
+            'groups' => ['api']
+        ]);
+     }
 }

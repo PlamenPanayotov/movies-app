@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Repository\UserRepository;
 use App\Service\Encryption\ArgonEncryption;
 use App\Service\Validation\UserValidationServiceInterface;
+use Symfony\Component\Security\Core\Security;
 
 class UserService implements UserServiceInterface
 {
@@ -13,15 +14,18 @@ class UserService implements UserServiceInterface
     private $userRepository;
     private $encryptionService;
     private $validator;
+    private $security;
 
 
     public function __construct(UserRepository $userRepository, 
                                 ArgonEncryption $encryptionService,
-                                UserValidationServiceInterface $validator)
+                                UserValidationServiceInterface $validator,
+                                Security $security)
     {
         $this->userRepository = $userRepository;
         $this->encryptionService = $encryptionService;
         $this->validator = $validator;
+        $this->security = $security;
     }
 
     public function save(User $user, $passwordConfirmation)
@@ -38,5 +42,13 @@ class UserService implements UserServiceInterface
         $user->setRoles(['ROLE_USER']);
 
         return $this->userRepository->insert($user);
+    }
+
+    /**
+     * @return User|null|object
+     */
+    public function currentUser(): ?User
+    {
+        return $this->security->getUser();
     }
 }
