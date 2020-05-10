@@ -6,5 +6,5 @@ use App\Entity\User;
 
 interface UserServiceInterface
 {
-    public function save(User $user);
+    public function save(User $user, $passwordConfirmation);
 }

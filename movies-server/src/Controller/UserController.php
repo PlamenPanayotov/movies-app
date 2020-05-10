@@ -29,23 +29,31 @@ class UserController extends AbstractController
         $user->setPassword($request->request->get("password"));
         $passwordConfirmation = $request->request->get("password_confirmation");
 
-        if ($user->getPassword() != $passwordConfirmation) {
-            $errors[] = "Password does not match the password confirmation.";
-        }
-
-        if (strlen($user->getPassword()) < 6) {
-            $errors[] = "Password should be at least 6 characters.";
-        }
-
         if(!$errors) {
-            return $this->json([
-                'user' => $this->userService->save($user)
-            ]);
+            $stmt = $this->userService->save($user, $passwordConfirmation);
+            if($stmt === true) {
+                return $this->json([
+                    'user' => $user
+                ]);
+            } else {
+                return $this->json([
+                    'error' => $stmt
+                ]);
+            }
+            
         }
 
         return $this->json([
             'errors' => $errors
         ], 400);
            
+    }
+
+    /**
+     * @Route("/login", name="api_login", methods={"POST"})
+     */
+    public function login()
+    {
+        return $this->json(['result' => true]);
     }
 }
