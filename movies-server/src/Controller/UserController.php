@@ -32,12 +32,11 @@ class UserController extends AbstractController
         $passwordConfirmation = $request->request->get("password_confirmation");
 
         
-            $stmt = $this->userService->save($user, $passwordConfirmation);
-            if($stmt === true) {
+            
                 return $this->json([
-                    'user' => $user
+                    'user' => $this->userService->save($user, $passwordConfirmation)
                 ]);
-            }        
+                  
         
 
         return $this->json([

@@ -15,7 +15,7 @@ class UserValidationService implements UserValidationServiceInterface
 
     public function checkPassword($password, $passwordConfirmation)
     {
-        if($password !== $passwordConfirmation) {
+        if($password != $passwordConfirmation) {
             throw new Exception('Password does not match the password confirmation.');
         }
 

@@ -44,11 +44,11 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
     public function insert($user)
     {
-        $errors = [];
+        
         try {
             $this->em->persist($user);
             $this->em->flush();
-            return true;
+            return $user;
         
         } catch (UniqueConstraintViolationException $e) {
             $errors[] = "The email provided already has an account!";
