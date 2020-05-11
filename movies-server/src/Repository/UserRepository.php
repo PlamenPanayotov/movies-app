@@ -51,10 +51,10 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             return $user;
         
         } catch (UniqueConstraintViolationException $e) {
-            $errors[] = "The email provided already has an account!";
+            $errors = "The email provided already has an account!";
             return $errors;
         } catch (\Exception $e) {
-            $errors[] = "Unable to save new user at this time.";
+            $errors = "Unable to save new user at this time.";
             return $errors;
         }
     

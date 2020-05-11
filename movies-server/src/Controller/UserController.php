@@ -25,22 +25,20 @@ class UserController extends AbstractController
      */
     public function register(Request $request)
     {
-        $errors = [];
         $user = new User();
         $user->setEmail($request->request->get("email"));
         $user->setPassword($request->request->get("password"));
         $passwordConfirmation = $request->request->get("password_confirmation");
 
-        
-            
-                return $this->json([
-                    'user' => $this->userService->save($user, $passwordConfirmation)
-                ]);
-                  
-        
-
+        $stmt = $this->userService->save($user, $passwordConfirmation);
+        if(gettype($stmt) == 'object') {
+            return $this->json([
+                'user' => $stmt
+            ]);
+        }
+                
         return $this->json([
-            'errors' => $errors
+            'errors' => $stmt
         ], 400);
            
     }
