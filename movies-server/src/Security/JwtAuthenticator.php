@@ -27,7 +27,6 @@ class JwtAuthenticator extends AbstractGuardAuthenticator
         // Default error message
         $error = "Unable to validate session.";
         
-            
         try
         {
             $decodedJwt = JWT::decode($cookie, $_ENV['JWT_SECRET'], ['HS256']);
