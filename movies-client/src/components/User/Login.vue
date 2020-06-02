@@ -3,6 +3,9 @@
     <input v-model="email" placeholder="email" />
     <input v-model="password" placeholder="password" />
     <input type="submit" value="Login" />
+    <div>
+      <div v-if="!loading">Loading...</div>
+    </div>
   </form>
 </template>
 
@@ -13,7 +16,8 @@ export default {
   data() {
     return {
       email: "",
-      password: ""
+      password: "",
+      loading: true
     };
   },
   methods: {
@@ -33,8 +37,8 @@ export default {
         })
         .catch(err => {
           console.error(err);
-        });
-      this.$router.push("/");
+        })
+        .finally(() => this.$router.push("/"), (this.loading = false));
     }
   }
 };
