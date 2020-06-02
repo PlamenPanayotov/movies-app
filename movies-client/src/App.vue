@@ -1,8 +1,8 @@
 <template>
   <div id="app">
     <img alt="Vue logo" src="./assets/logo.png" />
-    <app-navigation></app-navigation>
-    <router-view></router-view>
+    <app-navigation @onAuth="isAuth = $event" :isAuth="isAuth"></app-navigation>
+    <router-view @onAuth="isAuth = $event" :isAuth="isAuth"></router-view>
   </div>
 </template>
 
@@ -10,6 +10,11 @@
 import AppNavigation from "./components/common/Navigation";
 export default {
   name: "App",
+  data: function() {
+    return {
+      isAuth: localStorage.getItem("jwt") !== null
+    };
+  },
   components: {
     AppNavigation
   }

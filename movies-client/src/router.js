@@ -1,8 +1,12 @@
-import Vue from 'vue';
 import VueRouter from 'vue-router';
-import Home from './components/Home'
+import Home from './components/Home';
+import Login from './components/User/Login';
+import Register from './components/User/Register';
+import Profile from './components/User/Profile';
 
-Vue.use(VueRouter);
+
+
+
 
 const router = new VueRouter({
     mode: 'history',
@@ -10,25 +14,18 @@ const router = new VueRouter({
         {
             path: '/',
             component: Home,
-            meta: {
-                resources: {
-                    movies: 'https://api.themoviedb.org/3/movie/550?api_key=f5f5b5a829995b40eac24b23b82de87f'
-                }
-            }
+
         },
         {
-            path: '/register', component: () => import('./components/User/Register')
+            path: '/register', component: Register
         },
         {
-            path: '/login', component: () => import('./components/User/Login')
+            path: '/login', component: Login
         },
         {
-            path: '/profile', component: () => import('./components/User/Profile')
+            path: '/profile', component: Profile
         }
     ]
-});
-router.beforeEach((to, from, next) => {
-    
 });
 
 

@@ -7,6 +7,7 @@
 </template>
 
 <script>
+import authAxios from "@/axios-auth";
 export default {
   name: "Login",
   data() {
@@ -21,16 +22,19 @@ export default {
         email: this.email,
         password: this.password
       };
-      fetch("https://localhost:8000/login", {
-        method: "post",
-        headers: { "Content-type": "application/json" },
-        body: JSON.stringify(payload)
-      })
-        .then(payload => console.log(payload))
-        .catch(e => {
-          console.log(e);
+      authAxios
+        .post("login", payload)
+        .then(response => {
+          const localId = response.data.userId;
+          const jwt = response.data.jwt;
+          localStorage.setItem("userId", localId);
+          localStorage.setItem("jwt", jwt);
+          console.log(response);
+        })
+        .catch(err => {
+          console.error(err);
         });
-      this.$router.push("profile");
+      this.$router.push("/");
     }
   }
 };

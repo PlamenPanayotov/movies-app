@@ -49,7 +49,10 @@ class UserController extends AbstractController
      */
     public function login()
     {
-        return $this->json(['result' => true]);
+        // $jwt = $_COOKIE['jwt'];
+        return $this->json(['userId' => $this->getUser()->getId(),
+                            'userEmail' => $this->getUser()->getEmail()
+                            ]);
     }
 
     /**

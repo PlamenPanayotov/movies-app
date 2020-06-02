@@ -11,6 +11,7 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Firebase\JWT\JWT;
+use Symfony\Component\Validator\Constraints\Json;
 
 class LoginAuthenticator extends AbstractGuardAuthenticator
 {
@@ -52,9 +53,11 @@ class LoginAuthenticator extends AbstractGuardAuthenticator
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
     {
         $expireTime = time() + 3600;
+        $userId = $token->getUser()->getId();
+        $email = $token->getUser()->getEmail();
         $tokenPayload = [
-        'user_id' => $token->getUser()->getId(),
-        'email'   => $token->getUser()->getEmail(),
+        'user_id' => $userId,
+        'email'   => $email,
         'exp'     => $expireTime
     ];
     $jwt = JWT::encode($tokenPayload, $_ENV['JWT_SECRET']);
@@ -64,7 +67,9 @@ class LoginAuthenticator extends AbstractGuardAuthenticator
     $useHttps = true;
     setcookie("jwt", $jwt, $expireTime, "/", "", $useHttps, true);
     return new JsonResponse([
-        'result' => true
+        'userId' => $userId,
+        'email' => $email,
+        'jwt' => $jwt
     ]);
     }
 
