@@ -1,2 +1,5 @@
 api_logout:
-    path: /logout
+  path: /logout
+authentication_token:
+  path: /api/authentication_token
+  methods: ['POST']

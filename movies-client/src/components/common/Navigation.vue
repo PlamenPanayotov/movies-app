@@ -21,15 +21,23 @@
 </template>
 
 <script>
+import authAxios from "@/axios-auth";
 export default {
   props: {
     isAuth: Boolean
   },
   methods: {
     onLogout() {
-      localStorage.removeItem("jwt");
-      localStorage.removeItem("userId");
-      this.$emit("onAuth", false);
+      authAxios
+        .post("logout")
+        .then(() => {
+          localStorage.removeItem("jwt");
+          localStorage.removeItem("userId");
+          this.$emit("onAuth", false);
+        })
+        .cath(err => {
+          console.error(err);
+        });
     }
   },
   name: "Navigation",

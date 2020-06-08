@@ -11,6 +11,8 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Firebase\JWT\JWT;
+use Symfony\Component\HttpFoundation\Cookie;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints\Json;
 
 class LoginAuthenticator extends AbstractGuardAuthenticator
@@ -52,20 +54,27 @@ class LoginAuthenticator extends AbstractGuardAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
     {
-        $expireTime = time() + 3600;
+        $expireTime = time() + 33600;
         $userId = $token->getUser()->getId();
         $email = $token->getUser()->getEmail();
+        $role = $token->getUser()->getRoles();
         $tokenPayload = [
         'user_id' => $userId,
         'email'   => $email,
-        'exp'     => $expireTime
+        'exp'     => $expireTime,
+        'role'    => $role
     ];
     $jwt = JWT::encode($tokenPayload, $_ENV['JWT_SECRET']);
     
     // If you are developing on a non-https server, you will need to set 
     // the $useHttps variable to false
-    $useHttps = true;
-    setcookie("jwt", $jwt, $expireTime, "/", "", $useHttps, true);
+    $useHttps = false;
+    $response = new Response();
+    // setcookie("jwt", $jwt, $expireTime, "/", "localhost", $useHttps, false);
+    $cookie = new Cookie("jwt", $jwt, $expireTime, "/", "", $useHttps, false);
+    
+    $response->headers->setCookie($cookie);
+    $response->sendHeaders();
     return new JsonResponse([
         'userId' => $userId,
         'email' => $email,

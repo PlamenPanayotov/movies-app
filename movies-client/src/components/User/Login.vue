@@ -11,6 +11,7 @@
 
 <script>
 import authAxios from "@/axios-auth";
+import JWT_DECODE from "jwt-decode";
 export default {
   name: "Login",
   data() {
@@ -33,7 +34,7 @@ export default {
           const jwt = response.data.jwt;
           localStorage.setItem("userId", localId);
           localStorage.setItem("jwt", jwt);
-          console.log(response);
+          console.log(JWT_DECODE(jwt));
         })
         .catch(err => {
           console.error(err);
