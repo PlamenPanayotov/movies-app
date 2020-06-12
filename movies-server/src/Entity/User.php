@@ -129,15 +129,7 @@ class User implements UserInterface
 
     public function setApiToken(?string $apiToken): void
     {
-        $this->apiToken = $apiToken ?? md5(uniqid(rand(), true));
+        $this->apiToken = $apiToken;
     }
-    /**
-    * @ORM\PrePersist
-    */
-    public function createToken(): void
-    {
-        if(!$this->apiToken) {
-            $this->apiToken = md5(uniqid(rand(), true));
-        }
-    }
+
 }

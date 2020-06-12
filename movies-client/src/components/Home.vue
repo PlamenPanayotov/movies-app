@@ -1,22 +1,34 @@
 <template>
   <div>
-    <h1>Home</h1>
+    <h3 class="title-account">
+      User Profile
+      <small class="text-muted">Home</small>
+    </h3>
+    <ul class="list-group">
+      <li class="list-group-item"><i class="fas fa-envelope-square"></i>{{ email }}</li>
+      <li class="list-group-item"><i class="fas fa-lock"></i>{{ roles }}</li>
+    </ul>
   </div>
 </template>
 
 <script>
 export default {
-  props: {
-    isAuth: Boolean
-  },
+  name: "Home",
   data() {
     return {
-      movies: []
+      email: '',
+      roles: '',
     };
   },
-  name: "Home",
-  beforeCreate() {
-    this.$emit("onAuth", localStorage.getItem("jwt") !== null);
+  created() {
+    fetch('/authenticated-user')
+    .then(res => res.json())
+    .then(user => {
+      console.log("user" + user);
+
+      this.email = user.email;
+      this.roles = user.roles;
+    })
   }
 };
 </script>

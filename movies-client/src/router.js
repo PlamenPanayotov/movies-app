@@ -14,13 +14,13 @@ const router = new VueRouter({
         {
             path: '/',
             component: Home,
-
+            meta: { requiresAuth: true }
         },
         {
             path: '/register', component: Register
         },
         {
-            path: '/login', component: Login
+            path: '/login', component: Login, props: true
         },
         {
             path: '/profile', component: Profile

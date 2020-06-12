@@ -10,7 +10,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 
 use Symfony\Component\HttpFoundation\Request;
-
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class UserController extends AbstractController
 {
@@ -21,7 +22,23 @@ class UserController extends AbstractController
         $this->userService = $userService;
     }
     /**
-     * @Route("/register", name="user_register", methods={"POST"})
+     * @Route("/user", name="app_user")
+     */
+    public function __invoke(AuthenticationUtils $authenticationUtils): Response
+    {
+        // get the login error if there is one
+        $error = $authenticationUtils->getLastAuthenticationError();
+        // last username entered by the user
+        $lastUsername = $authenticationUtils->getLastUsername();
+
+        return $this->render('account/app.html.twig', [
+            'last_username' => $lastUsername,
+            'is_authenticated' => json_encode(!empty($this->getUser())),
+            'error' => $error
+        ]);
+    }
+    /**
+     * @Route("/user/register", name="user_register", methods={"POST"})
      */
     public function register(Request $request)
     {
@@ -45,7 +62,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/login", name="api_login", methods={"POST"})
+     * @Route("/user/login", name="api_login", methods={"POST"})
      */
     public function login()
     {
@@ -55,7 +72,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/profile", name="api_profile")
+     * @Route("/user/profile", name="api_profile")
      * @IsGranted("ROLE_USER")
      */
      public function profile()
@@ -69,5 +86,16 @@ class UserController extends AbstractController
             'groups' => ['api']
         ]);
      }
+
+     /**
+     * @Route("/user/logout", name="user_logout", methods={"GET"})
+     *
+     * @throws \Exception
+     */
+    public function logout()
+    {
+        // controller can be blank: it will never be executed!
+        throw new \Exception('Don\'t forget to activate logout in security.yaml');
+    }
 
 }

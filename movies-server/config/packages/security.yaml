@@ -17,19 +17,17 @@ security:
       security: false
     main:
       anonymous: true
-      # json_login:
-      #           check_path: App\Security\LoginAuthenticator
-      #           username_path: email
-      #           password_path: password
+      provider: user_provider
+      json_login:
+                check_path: App\Security\JasonAuthenticator
+                username_path: email
+                password_path: password
       guard:
         authenticators:
-          - App\Security\TokenAuthenticator
-          # - App\Security\LoginAuthenticator
-          # - App\Security\JwtAuthenticator
-        entry_point: App\Security\TokenAuthenticator
+          - App\Security\JsonAuthenticator
+        # entry_point: App\Security\TokenAuthenticator
       logout:
-        path: api_logout
-        success_handler: App\Security\JwtLogoutHandler
+        path: user_logout
       stateless: true
       # activate different ways to authenticate
       # http_basic: true
