@@ -50,7 +50,6 @@
 </template>
 
 <script>
-import authAxios from "@/axios-auth";
 export default {
   props: ["csrf_token", "last-email"],
   name: "Login",
@@ -75,19 +74,22 @@ export default {
   methods: {
     sendLogin() {
       console.log("send login form");
-      const payload = {
-        email: this.email,
-        password: this.password,
-        csrfToken: this.$props.csrf_token
-      };
-      authAxios
-        .post("login", payload)
+      fetch("https://localhost:8000/user", {
+        method: "POST",
+        headers: { "Content-type": "application/json" },
+        body: JSON.stringify({
+          email: this.email,
+          password: this.password,
+          _csrf_token: this.$props.csrf_token
+        })
+      })
         .then(res => res.json())
         .then(data => {
+          console.log(data);
           if (data === "authenticated") {
             this.$store.commit("change", true);
             console.log(
-              "user authenticated successfully " +
+              "user authenticated successfully" +
                 this.$store.getters.isAuthenticated
             );
             this.$router.push("/");
@@ -95,11 +97,7 @@ export default {
             this.isError = true;
             this.errorMessage = data;
           }
-        })
-        .catch(err => {
-          console.error(err);
-        })
-        .finally(() => this.$router.push("/"), (this.loading = false));
+        });
     }
   }
 };

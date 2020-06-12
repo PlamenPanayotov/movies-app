@@ -3,12 +3,12 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
-export const store = new Vuex.Store({
+const store = new Vuex.Store({
   state: {
     authenticated: false
   },
   mutations: {
-    change (state, value) {
+    change(state, value) {
       state.authenticated = value
     }
   },
@@ -22,3 +22,4 @@ export const store = new Vuex.Store({
     }
   }
 })
+export default store;

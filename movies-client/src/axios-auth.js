@@ -8,6 +8,7 @@ const instance = axios.create({
     baseURL: 'https://localhost:8000/user/',
     headers: {
         'Content-type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
     }
 });
 

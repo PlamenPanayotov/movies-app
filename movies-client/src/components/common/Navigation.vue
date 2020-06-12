@@ -4,16 +4,16 @@
       <li>
         <router-link to="/" exact>Home</router-link>
       </li>
-      <li v-if="!isAuth">
+      <li>
         <router-link to="/login" exact>Login</router-link>
       </li>
-      <li v-if="!isAuth">
+      <li>
         <router-link to="/register" exact>Register</router-link>
       </li>
-      <li v-if="isAuth">
+      <li>
         <router-link to="/profile" exact>Prolile</router-link>
       </li>
-      <li v-if="isAuth">
+      <li>
         <a @click="onLogout" class="logout">Logout</a>
       </li>
     </ul>
@@ -23,9 +23,6 @@
 <script>
 import authAxios from "@/axios-auth";
 export default {
-  props: {
-    isAuth: Boolean
-  },
   methods: {
     onLogout() {
       authAxios

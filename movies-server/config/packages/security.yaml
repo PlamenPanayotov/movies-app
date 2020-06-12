@@ -17,11 +17,11 @@ security:
       security: false
     main:
       anonymous: true
-      provider: user_provider
+      provider: app_user_provider
       json_login:
-                check_path: App\Security\JasonAuthenticator
-                username_path: email
-                password_path: password
+        check_path: app_user
+        username_path: email
+        password_path: password
       guard:
         authenticators:
           - App\Security\JsonAuthenticator

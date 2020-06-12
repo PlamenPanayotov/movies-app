@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
-class UserController extends AbstractController
+final class UserController extends AbstractController
 {
     private $userService;
 
@@ -31,11 +31,7 @@ class UserController extends AbstractController
         // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
 
-        return $this->render('account/app.html.twig', [
-            'last_username' => $lastUsername,
-            'is_authenticated' => json_encode(!empty($this->getUser())),
-            'error' => $error
-        ]);
+        return $this->json(['user' => $lastUsername]);
     }
     /**
      * @Route("/user/register", name="user_register", methods={"POST"})
@@ -59,16 +55,6 @@ class UserController extends AbstractController
             'errors' => $stmt
         ], 400);
            
-    }
-
-    /**
-     * @Route("/user/login", name="api_login", methods={"POST"})
-     */
-    public function login()
-    {
-        return $this->json(['userId' => $this->getUser()->getId(),
-                            'userEmail' => $this->getUser()->getEmail()
-                            ]);
     }
 
     /**
