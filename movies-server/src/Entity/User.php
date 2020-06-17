@@ -11,7 +11,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
  */
 class User implements UserInterface
 {
-
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -19,12 +18,6 @@ class User implements UserInterface
      * @Groups("api")
      */
     private $id;
-
-    /**
-      * @ORM\Column(type="string", length=180, unique=true, nullable=true)
-      * @Groups("api")
-      */
-      private $apiToken;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
@@ -121,15 +114,4 @@ class User implements UserInterface
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
     }
-
-    public function getApiToken(): ?string
-    {
-        return $this->apiToken;
-    }
-
-    public function setApiToken(?string $apiToken): void
-    {
-        $this->apiToken = $apiToken;
-    }
-
 }

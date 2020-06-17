@@ -12,6 +12,16 @@ export default {
   name: "App",
   components: {
     AppNavigation
+  },
+  created: function() {
+    this.$http.interceptors.response.use(undefined, function(err) {
+      return new Promise((resolve, reject) => {
+        if (err.status === 401 && err.config && !err.config.__isRetryRequest) {
+          console.log(resolve, reject);
+        }
+        throw err;
+      });
+    });
   }
 };
 </script>

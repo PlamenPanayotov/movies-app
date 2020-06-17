@@ -10,10 +10,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
-final class UserController extends AbstractController
+
+class UserController extends AbstractController
 {
     private $userService;
 
@@ -22,27 +21,14 @@ final class UserController extends AbstractController
         $this->userService = $userService;
     }
     /**
-     * @Route("/user", name="app_user")
-     */
-    public function __invoke(AuthenticationUtils $authenticationUtils): Response
-    {
-        // get the login error if there is one
-        $error = $authenticationUtils->getLastAuthenticationError();
-        // last username entered by the user
-        $lastUsername = $authenticationUtils->getLastUsername();
-
-        return $this->json(['user' => $lastUsername]);
-    }
-    /**
-     * @Route("/user/register", name="user_register", methods={"POST"})
+     * @Route("/register", name="user_register", methods={"POST"})
      */
     public function register(Request $request)
     {
         $user = new User();
-        $data = json_decode($request->getContent(), true);
-        $user->setEmail($data['email']);
-        $user->setPassword($data['password']);
-        $passwordConfirmation = $data['password_confirmation'];
+        $user->setEmail($request->request->get("email"));
+        $user->setPassword($request->request->get("password"));
+        $passwordConfirmation = $request->request->get("password_confirmation");
 
         $stmt = $this->userService->save($user, $passwordConfirmation);
         if(gettype($stmt) == 'object') {
@@ -58,8 +44,15 @@ final class UserController extends AbstractController
     }
 
     /**
-     * @Route("/user/profile", name="api_profile")
-     * @IsGranted("ROLE_USER")
+     * @Route("/login", name="api_login", methods={"POST"})
+     */
+    public function login()
+    {
+        return $this->json(['result' => true]);
+    }
+
+    /**
+     * @Route("/profile", name="api_profile")
      */
      public function profile()
      {
@@ -72,16 +65,4 @@ final class UserController extends AbstractController
             'groups' => ['api']
         ]);
      }
-
-     /**
-     * @Route("/user/logout", name="user_logout", methods={"GET"})
-     *
-     * @throws \Exception
-     */
-    public function logout()
-    {
-        // controller can be blank: it will never be executed!
-        throw new \Exception('Don\'t forget to activate logout in security.yaml');
-    }
-
 }

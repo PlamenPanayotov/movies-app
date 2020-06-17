@@ -2,6 +2,7 @@
 
 namespace App\Security;
 
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -48,7 +49,7 @@ class JsonAuthenticator extends AbstractFormLoginAuthenticator
     }
     public function supports(Request $request)
     {
-        return 'app_account' === $request->attributes->get('_route')
+        return 'app_user' === $request->attributes->get('_route')
             && $request->isMethod('POST');
     }
 
@@ -81,7 +82,7 @@ class JsonAuthenticator extends AbstractFormLoginAuthenticator
             throw new InvalidCsrfTokenException();
         }
 
-        $user = $this->entityManager->getRepository(UserAccount::class)->findOneBy(['email' => $credentials['email']]);
+        $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $credentials['email']]);
 
         if (!$user) {
             // fail authentication with a custom error

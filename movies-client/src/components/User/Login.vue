@@ -6,7 +6,7 @@
         <small class="text-muted">Please sign in</small>
       </h3>
     </div>
-    <form method="post" v-on:submit.prevent="sendLogin" class="form-group">
+    <form method="post" v-on:submit.prevent="login" class="form-group">
       <div class="form-group-row">
         <label for="inputEmail" class="col-sm-2 col-form-label">Email</label>
         <div class="col-sm-10">
@@ -51,53 +51,20 @@
 
 <script>
 export default {
-  props: ["csrf_token", "last-email"],
   name: "Login",
   data() {
     return {
       email: "",
-      password: "",
-      isError: false,
-      errorMessage: ""
+      password: ""
     };
   },
-  created() {
-    if (this.$props.last_email !== undefined) {
-      this.email = this.$props.last_email;
-    }
-    console.log("Login component: " + this.$store.getters.isAuthenticated);
-
-    if (this.$store.getters.isAuthenticated === true) {
-      this.$router.push("/");
-    }
-  },
   methods: {
-    sendLogin() {
-      console.log("send login form");
-      fetch("https://localhost:8000/user", {
-        method: "POST",
-        headers: { "Content-type": "application/json" },
-        body: JSON.stringify({
-          email: this.email,
-          password: this.password,
-          _csrf_token: this.$props.csrf_token
-        })
-      })
-        .then(res => res.json())
-        .then(data => {
-          console.log(data);
-          if (data === "authenticated") {
-            this.$store.commit("change", true);
-            console.log(
-              "user authenticated successfully" +
-                this.$store.getters.isAuthenticated
-            );
-            this.$router.push("/");
-          } else {
-            this.isError = true;
-            this.errorMessage = data;
-          }
-        });
+    login() {
+      let email = this.emal
+      let password = this.password
+      this.$store.dispatch('login', { email, password })
+      .then(() => this.$router.push('/'))
+      .catch(err => console.log(err))
     }
   }
 };
