@@ -21,14 +21,15 @@ class UserController extends AbstractController
         $this->userService = $userService;
     }
     /**
-     * @Route("/register", name="user_register", methods={"POST"})
+     * @Route("/api/register", name="user_register", methods={"POST"})
      */
     public function register(Request $request)
     {
         $user = new User();
-        $user->setEmail($request->request->get("email"));
-        $user->setPassword($request->request->get("password"));
-        $passwordConfirmation = $request->request->get("password_confirmation");
+        $data = json_decode($request->getContent(), true);
+        $user->setEmail($data["email"]);
+        $user->setPassword($data["password"]);
+        $passwordConfirmation = $data["password_confirmation"];
 
         $stmt = $this->userService->save($user, $passwordConfirmation);
         if(gettype($stmt) == 'object') {
@@ -44,7 +45,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/login", name="api_login", methods={"POST"})
+     * @Route("/api/login", name="api_login", methods={"POST"})
      */
     public function login()
     {
@@ -52,7 +53,8 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/profile", name="api_profile")
+     * @Route("/api/profile", name="api_profile")
+     * @IsGranted("ROLE_USER")
      */
      public function profile()
      {

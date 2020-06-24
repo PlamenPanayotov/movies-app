@@ -24,15 +24,7 @@ export default {
         password: this.password,
         password_confirmation: this.password_confirmation
       };
-      fetch("https://localhost:8000/register", {
-        method: "post",
-        headers: { "Content-type": "application/json" },
-        body: JSON.stringify(payload)
-      })
-        .then(payload => console.log(payload))
-        .catch(e => {
-          console.log(e);
-        });
+      this.$store.dispatch("register", payload);
       this.$router.push("login");
     }
   }

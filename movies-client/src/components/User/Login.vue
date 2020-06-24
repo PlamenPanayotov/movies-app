@@ -38,9 +38,6 @@
           />
         </div>
       </div>
-
-      <input type="hidden" name="_csrf_token" v-model="csrf_token" />
-
       <button class="btn btn-lg btn-primary" type="submit">Sign in</button>
     </form>
     <div v-if="isError === true">
@@ -50,6 +47,7 @@
 </template>
 
 <script>
+// import authAxios from "@/axios-auth";
 export default {
   name: "Login",
   data() {
@@ -60,11 +58,13 @@ export default {
   },
   methods: {
     login() {
-      let email = this.emal
-      let password = this.password
-      this.$store.dispatch('login', { email, password })
-      .then(() => this.$router.push('/'))
-      .catch(err => console.log(err))
+      const payload = {
+        email: this.email,
+        password: this.password
+      };
+      // Project Settings -> Web API key
+      this.$store.dispatch("login", payload);
+      this.$router.push("/");
     }
   }
 };

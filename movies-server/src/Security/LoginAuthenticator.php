@@ -28,10 +28,13 @@ class LoginAuthenticator extends AbstractGuardAuthenticator
 
     public function getCredentials(Request $request)
     {
-        return [
-            'email' => $request->request->get("email"),
-            'password' => $request->request->get("password")
+        $data = json_decode($request->getContent(), true);
+
+        $credentials = [
+            'email' => $data['email'],
+            'password' => $data['password']
         ];
+        return $credentials;
     }
 
     public function getUser($credentials, UserProviderInterface $userProvider)
@@ -66,7 +69,8 @@ class LoginAuthenticator extends AbstractGuardAuthenticator
     $useHttps = true;
     setcookie("jwt", $jwt, $expireTime, "/", "", $useHttps, true);
     return new JsonResponse([
-        'result' => true
+        'token' => $jwt,
+        'user' => $token->getUser()->getEmail()
     ]);
     }
 

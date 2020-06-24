@@ -5,6 +5,7 @@
 </template>
 
 <script>
+import authAxios from "@/axios-auth";
 export default {
   name: "Profile",
   data() {
@@ -12,10 +13,11 @@ export default {
       email: ""
     };
   },
-  methods: {
-    getProlile() {
-      fetch("https/localhost/8000/profile");
-    }
+  created: function() {
+    authAxios
+      .get("/profile")
+      .then(res => console.log(res))
+      .catch(err => console.log(err));
   }
 };
 </script>
